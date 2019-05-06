@@ -1,0 +1,7 @@
+name: Sum Everything Here
+description: 'Creates a Views field handler that enables you to sum all the selected fields'
+type: module
+package: Views
+core: '8.x'
+dependencies:
+  - drupal:views

@@ -1,0 +1,57 @@
+<?php
+
+
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implements hook_views_data().
+ */
+function sum_everything_here_views_data() {
+  $data['sum_everything_here']['table']['group'] = t('Global');
+  $data['sum_everything_here']['table']['join'] = [
+    // Exist in all views.
+    '#global' => [],
+  ];
+  $data['sum_everything_here']['field_sum_everything_field'] = [
+    'title' => t('Sum Everything Field'),
+    'help' => t('Views field that calculates the sum of all the selected fields.'),
+    'field' => [
+      'id' => 'field_sum_everything_field',
+    ],
+  ];
+  return $data;
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function sum_everything_here_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'views_pre_view') {
+    // Move my_module_form_alter() to the end of the list.
+    // \Drupal::moduleHandler()->getImplementations()
+    // iterates through $implementations with a foreach loop which PHP iterates
+    // in the order that the items were added, so to move an item to the end of
+    // the array, we remove it and then add it.
+    $group = $implementations['sum_everything_here'];
+    unset($implementations['sum_everything_here']);
+    $implementations['sum_everything_here'] = $group;
+
+  }
+}
+
+/**
+ * Implements hook_views_pre_view()
+ */
+function sum_everything_here_views_pre_view(ViewExecutable $view, $display_id, array &$args) {
+  // You may want to add something here if wanting to hide a view based on a
+  // null result on the field. Any example would be:
+  //  if ($view->id() === 'my_view') {
+  //    if ($display_id === 'attachment_1') {
+  //      $attachment_field = $view->getHandler('attachment_1', 'field', 'my_field');
+  //      if ($attachment_field['exclude'] == 1) {
+  //        $view->executed = TRUE;
+  //        $view->built = TRUE;
+  //      }
+  //    }
+  //  }
+}
