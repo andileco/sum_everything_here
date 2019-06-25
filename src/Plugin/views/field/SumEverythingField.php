@@ -60,7 +60,7 @@ class SumEverythingField extends NumericField {
     parent::getValue($values, $field);
 
     $fields = $this->options['data_field'];
-    $selected_fields = $this->view->display_handler->options['fields'];
+    $selected_fields = $this->view->getDisplay()->getOption('fields');
     foreach ($selected_fields as $key => $value) {
       if ($value['exclude'] != false) {
         unset($selected_fields[$key]);
@@ -70,6 +70,9 @@ class SumEverythingField extends NumericField {
     foreach ($fields as $field) {
       if (!empty($field) && $field !== 0 && in_array($field, $selected_fields)) {
           $this->additional_fields['sum_everything_field_data']
+            // if you are pulling data from non-entities, use:
+            // = $this->view->field[$field]->getValue($values)
+            // instead of the line below.
             = $values->_entity->get($field)->value
             + $this->additional_fields['sum_everything_field_data'];
         $value = $this->additional_fields['sum_everything_field_data'];
